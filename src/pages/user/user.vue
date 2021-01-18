@@ -54,14 +54,28 @@
 				var code = await this.getAuthCode()
 				
 				my.request({
-				  url: 'http://localhost:5757/aliPay/oauth',
+				  url: 'https://edflabschina.cn:5758/aliPay/oauth',
 				  method: 'POST',
 				  data: {//data里的key、value是开发者自定义的
 				    code: _this.authCode
 				  },
 				  dataType: 'json',
 				  success: function(res) {
-				    my.alert({content: 'success'});
+					console.log(res.data.order)
+					my.tradePay({
+					        tradeNO: res.data.order.trade_no,  
+					        success: function(res) {            
+					          my.alert({
+					           content: JSON.stringify(res),
+					         });
+					        },
+					        fail: function(res) {  
+					        my.alert({
+					          content: JSON.stringify(res),
+					          });
+					       },
+					});
+				    
 				  },
 				  fail: function(res) {
 				    my.alert({content: 'fail'});
