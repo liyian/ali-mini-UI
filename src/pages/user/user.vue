@@ -77,7 +77,7 @@
 			console.log(11)
 			if(options.info){
 			this.info = JSON.parse(options.info)
-			}
+			
 			my.setStorage({
 			  key: 'info',
 			  data: _this.info,
@@ -85,6 +85,8 @@
 			    my.alert({content: '写入成功'});
 			  }
 			})
+			}
+			
 			
 			my.getStorage({
 				key: 'info',
