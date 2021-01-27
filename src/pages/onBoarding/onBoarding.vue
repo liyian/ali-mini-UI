@@ -17,6 +17,9 @@
 				
 			};
 		},
+		onLoad(){
+			my.clearStorage();
+		},
 		methods:{
 			onGetAuthorize(res) {
 			    my.getOpenUserInfo({

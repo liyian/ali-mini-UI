@@ -1,5 +1,17 @@
 {
+	"easycom": {
+	        "^u-(.*)": "uview-ui/components/u-$1/u-$1.vue"
+	    },
+
 	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+		// {
+		//     "path" : "pages/recomand/recomand",
+		//     "style" : {}
+		// },
+		// {
+		//     "path" : "pages/plan/plan",
+		//     "style" : {}
+		// },
 		{
             "path" : "pages/onBoarding/onBoarding",
             "style" : {}
@@ -9,6 +21,26 @@
             "style" : {
 				"navigationBarBackgroundColor": "#273262"
 				}
+        }
+        ,{
+            "path" : "pages/address/address",
+            "style" : {}
+        }
+        ,{
+            "path" : "pages/plan/plan",
+            "style" : {}
+        }
+        ,{
+            "path" : "pages/recomand/recomand",
+            "style" : {}
+        }
+        ,{
+            "path" : "pages/planMade/planMade",
+            "style" : {}
+        }
+        ,{
+            "path" : "pages/paymentInfo/paymentInfo",
+            "style" : {}
         }
     ],
 	"globalStyle": {

@@ -17,9 +17,22 @@
 					<p style="color:#DA3E00;font-size: 13px;font-weight: 400;">编辑关联地址信息</p>
 				</div>
 			</div>
+			
 			<div class='user-info-middle'>
-				<image src='../../static/none.png'></image>
-				<div>
+				<image v-if="isPayed === 'unpayed'" src='../../static/unpayed.png'></image>
+				<image v-else-if="isPayed === 'payed'"  src='../../static/payed.png'></image>
+				<image v-else src='../../static/none.png'></image>
+				<div  v-if="isPayed === 'unpayed'">
+					<p style='color:#DA3E00;'>存在费用未支付 Waiting for payment</p>
+					<p>截止日期 Due: 20.1.1</p>
+				</div>
+			
+				<div v-else-if="isPayed === 'payed'">
+					<p>无未支付账单 No Overdue</p>
+					<p>下次缴费时间 Next Due：20.1.20</p>
+				</div>
+				
+				<div  v-else>
 					<p>未选择套餐</p>
 					<p>请点击上方选择套餐</p>
 				</div>
@@ -32,6 +45,20 @@
 		
 		<div class='user-feature'>
 			<h1>其他功能</h1>
+			<div style='padding-top:22px;display: flex; justify-content: space-between;'>
+				<div style='padding-left:12px' @tap="gotoPlan">
+				<image style='width:35px; height:35px;' src='../../static/exchange.png'>
+					<p>更换套餐</p>
+					</div>
+					<div style='padding-left:12px'>
+				<image style='width:35px; height:35px' src='../../static/close.png'>
+					<p>关闭帐户</p>
+					</div>
+					<div style='padding-left:12px'>
+				<image style='width:35px; height:35px' src='../../static/contact.png'>
+					<p>联系我们</p>
+					</div>
+			</div>
 		</div>
 	</view>
 </template>
@@ -41,50 +68,58 @@
 		data() {
 			return {
 				info:{},
-				address:'未关联地址'
+				address:'40, 10 Park Row, RI, 403992',
+				isPayed:''
 			}
 		},
 		onLoad(options){
+			var _this =this
+			console.log(11)
+			if(options.info){
 			this.info = JSON.parse(options.info)
-			console.log(this.info)
+			}
+			my.setStorage({
+			  key: 'info',
+			  data: _this.info,
+			  success: function() {
+			    my.alert({content: '写入成功'});
+			  }
+			})
+			
+			my.getStorage({
+				key: 'info',
+				  success: function(res) {
+				    _this.info = res.data
+				  },
+				  fail:function(){
+				}
+			})
+			console.log('info',this.info)
+			my.getStorage({
+				key: 'isPayed',
+				  success: function(res) {
+				    _this.isPayed = res.data
+					console.log(res)
+					
+				  }
+			})
+			
+			
+			
+				 
+			
+			
+			
+		},
+		mounted(){
+			console.log('ispay?',this.isPayed)
 		},
 		methods: {
 			async payment(){
-				var _this = this
-				var code = await this.getAuthCode()
-				
-				my.request({
-				  url: 'https://edflabschina.cn:5758/aliPay/oauth',
-				  method: 'POST',
-				  data: {//data里的key、value是开发者自定义的
-				    code: _this.authCode
-				  },
-				  dataType: 'json',
-				  success: function(res) {
-					console.log(res.data.order)
-					my.tradePay({
-					        tradeNO: res.data.order.trade_no,  
-					        success: function(res) {            
-					          my.alert({
-					           content: JSON.stringify(res),
-					         });
-					        },
-					        fail: function(res) {  
-					        my.alert({
-					          content: JSON.stringify(res),
-					          });
-					       },
-					});
-				    
-				  },
-				  fail: function(res) {
-				    my.alert({content: 'fail'});
-				  },
-				  complete: function(res) {
-				    my.hideLoading();
-				    my.alert({content: 'complete'});
-				  }
-				});
+				uni.navigateTo({
+
+				    url:"../paymentInfo/paymentInfo"
+				})
 			},
 			async getAuthCode(){
 				var _this = this
@@ -100,6 +135,13 @@
 				  },
 				})
 			},
+			
+			gotoPlan(){
+			        uni.navigateTo({
+			            // url: 'test?id=1&name=uniapp'  c传递参数
+			            url:"../plan/plan"
+			        })
+			}
 		}
 	}
 </script>
@@ -140,6 +182,7 @@ p{
 				width: 40%;
 				height: 90%;
 				margin: 20px;
+				border-radius: unset;
 			}
 			div{
 				width: 45%;
@@ -177,9 +220,14 @@ p{
 		padding:20px;
 		border-radius: 5px;
 		width:80%;
-		top:80%;
-		height:10%;
+		top:75%;
+		height:20%;
 		position:absolute;
+		image{
+			    position: relative;
+			    left: 50%;
+			    transform: translate(-50%,0);
+		}
 	}
 	.user-header{
 		width: 100%;
